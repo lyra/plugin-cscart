@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<addon scheme="2.0">
+    <id>payzen</id>
+    <name>PayZen</name>
+    <description>Allows you to install and uninstall PayZen payment module processor.</description>
+    <version>2.0.0</version>
+    <priority>100</priority>
+    <position>100</position>
+    <status>active</status>
+    <dependencies/>
+    <default_language>en</default_language>
+
+    <translations>
+        <item for="name" lang="fr">PayZen</item>
+        <item for="description" lang="fr">Permet d'installer et de désinstaller le processeur du module de paiement PayZen.</item>
+    </translations>
+
+    <translations>
+        <item for="name" lang="de">PayZen</item>
+        <item for="description" lang="de">Dies erlauben Sie die PayZen Zahlungsmodul Prozessor installieren und deinstallieren.</item>
+    </translations>
+
+    <queries>
+        <!-- Install and remove processor data -->
+        <item>
+            REPLACE INTO ?:payment_processors (`processor`, `processor_script`, `processor_template`, `admin_template`, `callback`, `type`) 
+            VALUES ('PayZen', 'payzen.php', 'views/orders/components/payments/cc_outside.tpl', 'payzen.tpl', 'N', 'P');
+        </item>
+
+        <item for="uninstall">DELETE FROM ?:payment_processors WHERE processor_script = 'payzen.php';</item>
+    </queries>
+
+    <language_variables>
+        <!-- English constant parameters -->
+        <item lang="en" id="payzen_module_information">MODULE DETAILS</item>
+        <item lang="en" id="payzen_developed_by">Developed by</item>
+        <item lang="en" id="payzen_contact_email">Contact us</item>
+        <item lang="en" id="payzen_contrib_version">Module version</item>
+        <item lang="en" id="payzen_gateway_version">PLatform version</item>
+
+        <item lang="en" id="payzen_gateway_access">PAYMENT GATEWAY ACCESS</item>
+        <item lang="en" id="payzen_site_id">Shop ID</item>
+        <item lang="en" id="payzen_site_id_desc">The identifier provided by PayZen.</item>
+        <item lang="en" id="payzen_key_test">Certificate in test mode</item>
+        <item lang="en" id="payzen_key_test_desc">Certificate provided by PayZen for test mode (available in PayZen Back Office).</item>
+        <item lang="en" id="payzen_key_prod">Certificate in production mode</item>
+        <item lang="en" id="payzen_key_prod_desc">Certificate provided by PayZen (available in PayZen Back Office after enabling production mode).</item>
+        <item lang="en" id="payzen_ctx_mode">Mode</item>
+        <item lang="en" id="payzen_ctx_mode_desc">The context mode of this module.</item>
+        <item lang="en" id="payzen_ctx_mode_test">TEST</item>
+        <item lang="en" id="payzen_ctx_mode_prod">PRODUCTION</item>
+        <item lang="en" id="payzen_platform_url">Payment page URL</item>
+        <item lang="en" id="payzen_platform_url_desc">Link to the payment page.</item>
+        <item lang="en" id="payzen_check_url">Instant Payment Notification URL to copy into your PayZen Back Office:</item>
+
+        <item lang="en" id="payzen_payment_page">PAYMENT PAGE</item>
+        <item lang="en" id="payzen_language">Default language</item>
+        <item lang="en" id="payzen_language_desc">Default language on the payment page.</item>
+        <item lang="en" id="payzen_available_languages">Available languages</item>
+        <item lang="en" id="payzen_available_languages_desc">Languages available on the payment page. If you do not select any, all the supported languages will be available.</item>
+        <item lang="en" id="payzen_capture_delay">Capture delay</item>
+        <item lang="en" id="payzen_capture_delay_desc">The number of days before the bank capture (adjustable in your PayZen Back Office).</item>
+        <item lang="en" id="payzen_validation_mode">Validation mode</item>
+        <item lang="en" id="payzen_validation_mode_desc">If manual is selected, you will have to confirm payments manually in your PayZen Back Office.</item>
+        <item lang="en" id="payzen_payment_cards">Card Types</item>
+        <item lang="en" id="payzen_payment_cards_desc">The card type(s) that can be used for the payment. Select none to use platform configuration.</item>
+
+        <item lang="en" id="payzen_selective_3ds">SELECTIVE 3DS</item>
+        <item lang="en" id="payzen_3ds_min_amount">to activate 3-DS</item>
+        <item lang="en" id="payzen_3ds_min_amount_desc">Needs subscription to Selective 3-D Secure option.</item>
+
+        <item lang="en" id="payzen_amount_restrictions">AMOUNT RESTRICTIONS</item>
+        <item lang="en" id="payzen_amount_min">Minimum amount</item>
+        <item lang="en" id="payzen_amount_min_desc">Minimum amount to activate this payment method.</item>
+        <item lang="en" id="payzen_amount_max">Maximum amount</item>
+        <item lang="en" id="payzen_amount_max_desc">Maximum amount to activate this payment method.</item>
+
+        <item lang="en" id="payzen_return_options">RETURN OPTIONS</item>
+        <item lang="en" id="payzen_redirect_enabled">Automatic redirection</item>
+        <item lang="en" id="payzen_redirect_enabled_desc">If enabled, the buyer is automatically redirected to your site at the end of the payment.</item>
+        <item lang="en" id="payzen_redirect_success_timeout">Redirection timeout on success</item>
+        <item lang="en" id="payzen_redirect_success_timeout_desc">Time in seconds (0-300) before the buyer is automatically redirected to your website after a successful payment.</item>
+        <item lang="en" id="payzen_redirect_success_message">Redirection message on success</item>
+        <item lang="en" id="payzen_redirect_success_message_desc">Message displayed on the payment page prior to redirection after a successful payment.</item>
+        <item lang="en" id="payzen_redirect_error_timeout">Failure redirection timeout</item>
+        <item lang="en" id="payzen_redirect_error_timeout_desc">Time in seconds (0-300) before the buyer is automatically redirected to your website after a declined payment.</item>
+        <item lang="en" id="payzen_redirect_error_message">Redirection message on failure</item>
+        <item lang="en" id="payzen_redirect_error_message_desc">Message displayed on the payment page prior to redirection after a declined payment.</item>
+        <item lang="en" id="payzen_return_mode">Return mode</item>
+        <item lang="en" id="payzen_return_mode_desc">Method that will be used for transmitting the payment result from the payment page to your shop.</item>
+        <item lang="en" id="payzen_registered_status">Registered orders status</item>
+        <item lang="en" id="payzen_registered_status_desc">Status of orders when payment is successfull.</item>
+
+        <!-- English default values -->
+        <item lang="en" id="payzen_lang_fr">French</item>
+        <item lang="en" id="payzen_lang_de">German</item>
+        <item lang="en" id="payzen_lang_en">English</item>
+        <item lang="en" id="payzen_lang_es">Spanish</item>
+        <item lang="en" id="payzen_lang_zh">Chinese</item>
+        <item lang="en" id="payzen_lang_it">Italian</item>
+        <item lang="en" id="payzen_lang_ja">Japanese</item>
+        <item lang="en" id="payzen_lang_pt">Portuguese</item>
+        <item lang="en" id="payzen_lang_nl">Dutch</item>
+        <item lang="en" id="payzen_lang_sv">Swedish</item>
+        <item lang="en" id="payzen_lang_ru">Russian</item>
+        <item lang="en" id="payzen_lang_pl">Polisch</item>
+        <item lang="en" id="payzen_lang_tr">Turkisch</item>
+
+        <item lang="en" id="payzen_valid_mode_default">Back Office configuration</item>
+        <item lang="en" id="payzen_valid_mode_automatic">Automatic</item>
+        <item lang="en" id="payzen_valid_mode_manual">Manual</item>
+
+        <item lang="en" id="payzen_disabled">Disabled</item>
+        <item lang="en" id="payzen_enabled">Enabled</item>
+
+        <item lang="en" id="payzen_tech_error_msg">An error occured in the payment process.</item>
+        <item lang="en" id="payzen_pass_to_prod_info"><![CDATA[<p><u>GOING INTO PRODUCTION</u></p>You want to know how to put your shop into production mode, please go to this URL :]]></item>
+        <item lang="en" id="payzen_url_check_warn">The automatic validation has not worked. Have you correctly set up the notification URL in your PayZen Back Office ?</item>
+        <item lang="en" id="payzen_url_check_details"><![CDATA[For understanding the problem, please read the documentation of the module : <br />&nbsp;&nbsp;&nbsp;- Chapter &laquo;To read carefully before going further&raquo;<br />&nbsp;&nbsp;&nbsp;- Chapter &laquo;Notification URL settings&raquo;]]></item>
+
+
+        <!-- French constant parameters -->
+        <item lang="fr" id="payzen_module_information">INFORMATIONS SUR LE MODULE</item>
+        <item lang="fr" id="payzen_developed_by">Développé par</item>
+        <item lang="fr" id="payzen_contact_email">Courriel de contact</item>
+        <item lang="fr" id="payzen_contrib_version">Version du module</item>
+        <item lang="fr" id="payzen_gateway_version">Version de la plateforme</item>
+
+        <item lang="fr" id="payzen_gateway_access">ACCÈS À LA PLATEFORME</item>
+        <item lang="fr" id="payzen_site_id">Identifiant boutique</item>
+        <item lang="fr" id="payzen_site_id_desc">Identifiant fourni par PayZen.</item>
+        <item lang="fr" id="payzen_key_test">Certificat en mode test</item>
+        <item lang="fr" id="payzen_key_test_desc">Certificat fourni par PayZen pour le mode test (disponible sur le Back Office PayZen).</item>
+        <item lang="fr" id="payzen_key_prod">Certificat en mode production</item>
+        <item lang="fr" id="payzen_key_prod_desc">Certificat fourni par PayZen (disponible sur le Back Office PayZen après passage en production).</item>
+        <item lang="fr" id="payzen_ctx_mode">Mode</item>
+        <item lang="fr" id="payzen_ctx_mode_desc">Mode de fonctionnement du module.</item>
+        <item lang="fr" id="payzen_ctx_mode_test">TEST</item>
+        <item lang="fr" id="payzen_ctx_mode_prod">PRODUCTION</item>
+        <item lang="fr" id="payzen_platform_url">URL de la page de paiement</item>
+        <item lang="fr" id="payzen_platform_url_desc">URL vers laquelle l'acheteur sera redirigé pour le paiement.</item>
+        <item lang="fr" id="payzen_check_url">URL de notification à copier dans le Back Office PayZen:</item>
+
+        <item lang="fr" id="payzen_payment_page">PAGE DE PAIEMENT</item>
+        <item lang="fr" id="payzen_language">Langue par défaut</item>
+        <item lang="fr" id="payzen_language_desc">Sélectionner la langue par défaut à utiliser sur la page de paiement.</item>
+        <item lang="fr" id="payzen_available_languages">Langues disponibles</item>
+        <item lang="fr" id="payzen_available_languages_desc">Sélectionner les langues à proposer sur la page de paiement. Ne rien sélectionner pour utiliser la configuration de la plateforme.</item>
+        <item lang="fr" id="payzen_capture_delay">Délai avant remise en banque</item>
+        <item lang="fr" id="payzen_capture_delay_desc">Le nombre de jours avant la remise en banque (paramétrable sur votre Back Office PayZen).</item>
+        <item lang="fr" id="payzen_validation_mode">Mode de validation</item>
+        <item lang="fr" id="payzen_validation_mode_desc">En mode manuel, vous devrez confirmer les paiements dans le Back Office PayZen.</item>
+        <item lang="fr" id="payzen_payment_cards">Types de carte</item>
+        <item lang="fr" id="payzen_payment_cards_desc">Le(s) type(s) de carte pouvant être utilisé(s) pour le paiement. Ne rien sélectionner pour utiliser la configuration de la plateforme.</item>
+
+        <item lang="fr" id="payzen_selective_3ds">3DS SÉLECTIF</item>
+        <item lang="fr" id="payzen_3ds_min_amount">Montant minimum pour lequel activer 3DS</item>
+        <item lang="fr" id="payzen_3ds_min_amount_desc">Nécessite la souscription à l'option 3-D Secure sélectif.</item>
+
+        <item lang="fr" id="payzen_amount_restrictions">RESTRICTIONS SUR LE MONTANT</item>
+        <item lang="fr" id="payzen_amount_min">Montant minimum</item>
+        <item lang="fr" id="payzen_amount_min_desc">Montant minimum pour lequel cette méthode de paiement est disponible.</item>
+        <item lang="fr" id="payzen_amount_max">Montant maximum</item>
+        <item lang="fr" id="payzen_amount_max_desc">Montant maximum pour lequel cette méthode de paiement est disponible.</item>
+
+        <item lang="fr" id="payzen_return_options">RETOUR À LA BOUTIQUE</item>
+        <item lang="fr" id="payzen_redirect_enabled">Redirection automatique</item>
+        <item lang="fr" id="payzen_redirect_enabled_desc">Si activée, l'acheteur sera redirigé automatiquement vers votre site à la fin du paiement.</item>
+        <item lang="fr" id="payzen_redirect_success_timeout">Temps avant redirection (succès)</item>
+        <item lang="fr" id="payzen_redirect_success_timeout_desc">Temps en secondes (0-300) avant que le client ne soit redirigé automatiquement vers votre site lorsque le paiement a réussi.</item>
+        <item lang="fr" id="payzen_redirect_success_message">Message avant redirection (succès)</item>
+        <item lang="fr" id="payzen_redirect_success_message_desc">Message affiché sur la page de paiement avant redirection lorsque le paiement a réussi.</item>
+        <item lang="fr" id="payzen_redirect_error_timeout">Temps avant redirection (échec)</item>
+        <item lang="fr" id="payzen_redirect_error_timeout_desc">Temps en secondes (0-300) avant que le client ne soit redirigé automatiquement vers votre site lorsque le paiement a échoué.</item>
+        <item lang="fr" id="payzen_redirect_error_message">Message avant redirection (échec)</item>
+        <item lang="fr" id="payzen_redirect_error_message_desc">Message affiché sur la page de paiement avant redirection lorsque le paiement a échoué.</item>
+        <item lang="fr" id="payzen_return_mode">Mode de retour</item>
+        <item lang="fr" id="payzen_return_mode_desc">Façon dont l'acheteur transmettra le résultat du paiement lors de son retour à la boutique.</item>
+        <item lang="fr" id="payzen_registered_status">Statut des commandes enregistrées</item>
+        <item lang="fr" id="payzen_registered_status_desc">Statut des commandes dont le paiement a réussi.</item>
+
+        <!-- French default values -->
+        <item lang="fr" id="payzen_lang_fr">Français</item>
+        <item lang="fr" id="payzen_lang_de">Allemand</item>
+        <item lang="fr" id="payzen_lang_en">Anglais</item>
+        <item lang="fr" id="payzen_lang_es">Espagnol</item>
+        <item lang="fr" id="payzen_lang_zh">Chinois</item>
+        <item lang="fr" id="payzen_lang_it">Italien</item>
+        <item lang="fr" id="payzen_lang_ja">Japonnais</item>
+        <item lang="fr" id="payzen_lang_pt">Portugais</item>
+        <item lang="fr" id="payzen_lang_nl">Néerlandais</item>
+        <item lang="fr" id="payzen_lang_sv">Suédois</item>
+        <item lang="fr" id="payzen_lang_ru">Russe</item>
+        <item lang="fr" id="payzen_lang_pl">Polonais</item>
+        <item lang="fr" id="payzen_lang_tr">Turc</item>
+
+        <item lang="fr" id="payzen_valid_mode_default">Configuration Back Office</item>
+        <item lang="fr" id="payzen_valid_mode_automatic">Automatique</item>
+        <item lang="fr" id="payzen_valid_mode_manual">Manuelle</item>
+
+        <item lang="fr" id="payzen_disabled">Désactivée</item>
+        <item lang="fr" id="payzen_enabled">Activée</item>
+
+        <item lang="fr" id="payzen_tech_error_msg">Une erreur est survenue dans le processus de paiement.</item>
+        <item lang="fr" id="payzen_pass_to_prod_info"><![CDATA[<p><u>PASSAGE EN PRODUCTION</u></p>Vous souhaitez savoir comment passer votre boutique en production,  merci de consulter cette URL :]]></item>
+        <item lang="fr" id="payzen_url_check_warn">La validation automatique n'a pas fonctionné. Avez-vous correctement configuré l'URL de notification dans le Back Office PayZen ?</item>
+        <item lang="fr" id="payzen_url_check_details"><![CDATA[Afin de comprendre la problématique, reportez vous à la documentation du module : <br />&nbsp;&nbsp;&nbsp;- Chapitre &laquo;A lire attentivement avant d'aller loin&raquo;<br />&nbsp;&nbsp;&nbsp;- Chapitre &laquo;Paramétrage de l'URL de notification&raquo;]]></item>
+
+
+        <!-- German constant parameters -->
+        <item lang="de" id="payzen_module_information">MODULINFORMATIONEN</item>
+        <item lang="de" id="payzen_developed_by">Entwickelt von</item>
+        <item lang="de" id="payzen_contact_email">Kontakt</item>
+        <item lang="de" id="payzen_contrib_version">Modulversion</item>
+        <item lang="de" id="payzen_gateway_version">Plattformversion</item>
+
+        <item lang="de" id="payzen_gateway_access">ZUGANG ZAHLUNGSSCHNITTSTELLE</item>
+        <item lang="de" id="payzen_site_id">Shop ID</item>
+        <item lang="de" id="payzen_site_id_desc">Kennung, die von Ihrer Bank bereitgestellt wird.</item>
+        <item lang="de" id="payzen_key_test">Zertifikat im Testbetrieb</item>
+        <item lang="de" id="payzen_key_test_desc">Von Ihrer Bank bereitgestelltes Zertifikat (im PayZen-System verfügbar).</item>
+        <item lang="de" id="payzen_key_prod">Zertifikat im Produktivbetrieb</item>
+        <item lang="de" id="payzen_key_prod_desc">Von Ihrer Bank bereitgestelltes Zertifikat (im PayZen-System verfügbar).</item>
+        <item lang="de" id="payzen_ctx_mode">Modus</item>
+        <item lang="de" id="payzen_ctx_mode_desc">Kontextmodus dieses Moduls.</item>
+        <item lang="de" id="payzen_ctx_mode_test">TEST</item>
+        <item lang="de" id="payzen_ctx_mode_prod">PRODUKTION</item>
+        <item lang="de" id="payzen_platform_url">Plattform-URL</item>
+        <item lang="de" id="payzen_platform_url_desc">Link zur Bezahlungsplattform.</item>
+        <item lang="de" id="payzen_check_url">URL vor Übertragung in Ihr PayZen prüfen:</item>
+
+        <item lang="de" id="payzen_payment_page">ZAHLUNGSSEITE</item>
+        <item lang="de" id="payzen_language">Standardsprache</item>
+        <item lang="de" id="payzen_language_desc">Wählen Sie bitte die Spracheinstellung der Zahlungsseiten aus.</item>
+        <item lang="de" id="payzen_available_languages">Verfügbare Sprachen</item>
+        <item lang="de" id="payzen_available_languages_desc">Verfügbare Sprachen der Zahlungsseite. Nichts auswählen, um die Einstellung der Zahlungsplattform zu benutzen.</item>
+        <item lang="de" id="payzen_capture_delay">Einzugsfrist</item>
+        <item lang="de" id="payzen_capture_delay_desc">Anzahl der Tage bis zum Einzug der Zahlung (Einstellung über Ihr PayZen-System).</item>
+        <item lang="de" id="payzen_validation_mode">Bestätigungsmodus</item>
+        <item lang="de" id="payzen_validation_mode_desc">Bei manueller Eingabe müssen Sie Zahlungen manuell in Ihrem Banksystem bestätigen.</item>
+        <item lang="de" id="payzen_payment_cards">Art der Kreditkarten</item>
+        <item lang="de" id="payzen_payment_cards_desc">Liste der/die für die Zahlung verfügbare(n) Kartentyp(en), durch Semikolon getrennt.</item>
+
+        <item lang="de" id="payzen_selective_3ds">SELEKTIVES 3DS</item>
+        <item lang="de" id="payzen_3ds_min_amount">Mindestbetrag zur Aktivierung von 3-DS</item>
+        <item lang="de" id="payzen_3ds_min_amount_desc">Muss für die Option Selektives 3-D Secure freigeschaltet sein.</item>
+
+        <item lang="de" id="payzen_amount_restrictions">BETRAGSBESCHRÄNKUNGEN</item>
+        <item lang="de" id="payzen_amount_min">Mindestbetrag</item>
+        <item lang="de" id="payzen_amount_min_desc">Mindestbetrag für die Nutzung dieser Zahlungsweise.</item>
+        <item lang="de" id="payzen_amount_max">Höchstbetrag</item>
+        <item lang="de" id="payzen_amount_max_desc">Höchstbetrag für die Nutzung dieser Zahlungsweise.</item>
+
+        <item lang="de" id="payzen_return_options">ZURÜCK ZUM SHOP</item>
+        <item lang="de" id="payzen_redirect_enabled">Automatische Weiterleitung</item>
+        <item lang="de" id="payzen_redirect_enabled_desc">Ist diese Einstellung aktiviert, wird der Kunde am Ende des Bezahlvorgangs automatisch auf Ihre Seite weitergeleitet.</item>
+        <item lang="de" id="payzen_redirect_success_timeout">Zeitbeschränkung Weiterleitung im Erfolgsfall</item>
+        <item lang="de" id="payzen_redirect_success_timeout_desc">Zeitspanne in Sekunden (0-300) bis zur automatischen Weiterleitung des Kunden auf Ihre Seite nach erfolgter Zahlung.</item>
+        <item lang="de" id="payzen_redirect_success_message">Weiterleitungs-Nachricht im Erfolgsfall</item>
+        <item lang="de" id="payzen_redirect_success_message_desc">Nachricht, die nach erfolgter Zahlung und vor der Weiterleitung auf der Plattform angezeigt wird.</item>
+        <item lang="de" id="payzen_redirect_error_timeout">Zeitbeschränkung Weiterleitung nach Ablehnung</item>
+        <item lang="de" id="payzen_redirect_error_timeout_desc">Zeitspanne in Sekunden (0-300) bis zur automatischen Weiterleitung des Kunden auf Ihre Seite nach fehlgeschlagener Zahlung.</item>
+        <item lang="de" id="payzen_redirect_error_message">Weiterleitungs-Nachricht nach Ablehnung</item>
+        <item lang="de" id="payzen_redirect_error_message_desc">Nachricht, die nach fehlgeschlagener Zahlung und vor der Weiterleitung auf der Plattform angezeigt wird.</item>
+        <item lang="de" id="payzen_return_mode">Übermittlungs-Modus</item>
+        <item lang="de" id="payzen_return_mode_desc">Methode, die zur Übermittlung des Zahlungsergebnisses von der Zahlungsschnittstelle an Ihren Shop verwendet wird.</item>
+        <item lang="de" id="payzen_registered_status">Status der gespeicherten Bestellungen</item>
+        <item lang="de" id="payzen_registered_status_desc">Status der gelungenen Zahlungen.</item>
+
+        <!-- German default values -->
+        <item lang="de" id="payzen_lang_fr">Französisch</item>
+        <item lang="de" id="payzen_lang_de">Deutsch</item>
+        <item lang="de" id="payzen_lang_en">Englisch</item>
+        <item lang="de" id="payzen_lang_es">Spanisch</item>
+        <item lang="de" id="payzen_lang_zh">Chinesisch</item>
+        <item lang="de" id="payzen_lang_it">Italienisch</item>
+        <item lang="de" id="payzen_lang_ja">Japanisch</item>
+        <item lang="de" id="payzen_lang_pt">Portugiesisch</item>
+        <item lang="de" id="payzen_lang_nl">Holländisch</item>
+        <item lang="de" id="payzen_lang_sv">Schwedisch</item>
+        <item lang="de" id="payzen_lang_ru">Russisch</item>
+        <item lang="de" id="payzen_lang_pl">Polnisch</item>
+        <item lang="de" id="payzen_lang_tr">Türkisch</item>
+
+        <item lang="de" id="payzen_valid_mode_default">Einstellung Back Office</item>
+        <item lang="de" id="payzen_valid_mode_automatic">Automatisch</item>
+        <item lang="de" id="payzen_valid_mode_manual">Manuell</item>
+
+        <item lang="de" id="payzen_disabled">Deaktivierte</item>
+        <item lang="de" id="payzen_enabled">Aktivierte</item>
+
+        <item lang="de" id="payzen_tech_error_msg">Ein Fehler ist bei dem Zahlungsvorgang unterlaufen.</item>
+        <item lang="de" id="payzen_pass_to_prod_info"><![CDATA[<p><u>UMSTELLUNG AUF PRODUKTIONSUMFELD</u></p>Sie möchten wissen, wie Sie auf Produktionsumfeld umstellen können, bitte lesen Sie folgende URL :]]></item>
+        <item lang="de" id="payzen_url_check_warn">Die automatische Bestätigung hat nicht funktioniert. Haben Sie die Server URL im Backoffice PayZen richtig eingestellt?</item>
+        <item lang="de" id="payzen_url_check_details"><![CDATA[Um die Problematif zu verstehen, benutzen Sie bitte die Benutzerhilfe des Moduls: <br />&nbsp;&nbsp;&nbsp;- Kapitel &laquo;Aufmerksam lesen&raquo;<br />&nbsp;&nbsp;&nbsp;- Kapitel &laquo;Einstellung der Server URL&raquo;]]></item>
+    </language_variables>
+</addon>
