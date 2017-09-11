@@ -249,6 +249,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $data['ship_to_state'] = $order_info['s_state'];
         $data['ship_to_country'] = $order_info['s_country'];
         $data['ship_to_zip'] = $order_info['s_zipcode'];
+        $data['ship_to_phone_num'] = $order_info['s_phone'];
     }
 
     $payzenRequest->setFromArray($data);
@@ -257,11 +258,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
     $msg = __('text_cc_processor_connection', array('[processor]' => 'PayZen'));
 
 echo <<<EOT
-        <form action="{$payzenRequest->getRequestUrl()}" method="POST" name="payzen_form">
+        <form action="{$payzenRequest->get('platform_url')}" method="POST" name="payzen_form">
             {$payzenRequest->getRequestHtmlFields()}
         </form>
 
-        <div align=center>{$msg}</div>
+        <div style="text-align: center;">{$msg}</div>
 
         <script type="text/javascript">
             window.onload = function() {
