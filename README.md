@@ -1,17 +1,38 @@
-# PayZen for CS-Cart
+# PayZen for CS-CART
 
-PayZen for CS-Cart is an open source plugin that links e-commerce websites based on CS-Cart to PayZen secured payment gateway developped by [Lyra Network](https://www.lyra-network.com/).
+PayZen for CS-CART is an open source plugin that links e-commerce websites based on CS-CART to PayZen secure payment gateway developed by [Lyra Network](https://www.lyra.com/).
 
-# Installation & Upgrade
+## Installation & Upgrade
 
-Coming soon.
+In the CS-CART admin panel:
 
-# Configuration
+- If the plugin is already installed, uninstall it in Add-ons > Manage add-ons. WARNING: Do not forget to note the parameters of your plugin and in particular to note the production key which is no longer visible in the PayZen Back Office.
 
-Coming soon.
+- Transfer and install the payment module by clicking the (+) button in Add-ons > Manage add-ons. Click on the Local button and look for the new plugin of payment on your computer.
+
+- To add the PayZen payment method, go to the menu Administration > Payment methods and click the (+) button.
+
+- Set the parameters as following:
+    - Name: PayZen
+    - Processor: PayZen
+    - Payment category: Credit card
+    - Configure the rest of the parameters according to your needs.
+
+- Once the all parameters are filled, click the Create button.
+
+
+## Configuration
+
+In the CS-CART admin panel:
+
+- Go to Administration > Payment methods.
+
+- Click on PayZen then click on the Configure tab.
+
+- Set the parameters then click the Save button.
 
 ## License
 
-Each PayZen payment plugin source file included in this distribution is licensed under the MIT license.
+Each PayZen payment module source file included in this distribution is licensed under the The MIT License (MIT).
 
 Please see LICENSE.txt for the full text of the MIT license. It is also available through the world-wide-web at this URL: https://opensource.org/licenses/mit-license.html.
