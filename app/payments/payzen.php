@@ -13,7 +13,8 @@ $context_initialized = false;
 if (!defined('BOOTSTRAP')) {
     if (isset($_POST['vads_hash']) && !empty($_POST['vads_hash']) &&
         isset($_POST['vads_order_id']) && !empty($_POST['vads_order_id']) &&
-        isset($_POST['vads_order_info']) && !empty($_POST['vads_order_info'])) {
+        isset($_POST['vads_ext_info_session_id']) && !empty($_POST['vads_ext_info_session_id']) &&
+        isset($_POST['vads_ext_info_company_id']) && !empty($_POST['vads_ext_info_company_id'])) {
         // Set flag to allow session loading.
         define('FORCE_SESSION_START', true);
         define('SKIP_SESSION_VALIDATION', true); // For backward compatibility.
@@ -23,25 +24,18 @@ if (!defined('BOOTSTRAP')) {
         $class_session = class_exists('\Tygh\Session') ? '\Tygh\Session' : 'Session';
         $class_registry = class_exists('\Tygh\Registry') ? '\Tygh\Registry' : 'Registry';
 
-        require_once $class_registry::get('config.dir.functions') . 'fn.payzen.php';
-        $logger = fn_payzen_logger();
-
-        $context_initialized = true;
-
-        // Parse order_info parameter.
-        $parts = explode('&', $_POST['vads_order_info']);
-
         // Restore initial session.
-        $id = substr($parts[0], strlen('session_id='));
-        $class_session::resetId($id);
+        $class_session::resetId($_POST['vads_ext_info_session_id']);
 
         // Restore initial shop.
-        $company_id = substr($parts[1], strlen('company_id='));
+        $company_id = $_POST['vads_ext_info_company_id'];
         if (function_exists('fn_payments_set_company_id')) {
             fn_payments_set_company_id(0, $company_id);
         } else {
             $class_registry::set('runtime.company_id', $company_id); // For backward compatibility.
         }
+
+        $context_initialized = true;
 
         // Set info that lets this script complete the process.
         define('PAYMENT_NOTIFICATION', true);
@@ -54,10 +48,10 @@ if (!defined('BOOTSTRAP')) {
 if (!$context_initialized) {
     $class_session = class_exists('\Tygh\Session') ? '\Tygh\Session' : 'Session';
     $class_registry = class_exists('\Tygh\Registry') ? '\Tygh\Registry' : 'Registry';
-
-    require_once $class_registry::get('config.dir.functions') . 'fn.payzen.php';
-    $logger = fn_payzen_logger();
 }
+
+require_once $class_registry::get('config.dir.functions') . 'fn.payzen.php';
+$logger = fn_payzen_logger();
 
 global $payzen_plugin_features, $payzen_default_values;
 
@@ -67,10 +61,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
     //check order id
     $req_order_id = (isset($_REQUEST['vads_order_id']) && is_numeric($_REQUEST['vads_order_id'])) ? $_REQUEST['vads_order_id'] : '';
-
-    if (($mode === 'process') && fn_check_payment_script('payzen.php', $req_order_id, $processor_data)) {
+    if (($mode === 'process') && (fn_check_payment_script('payzen.php', $req_order_id, $processor_data)
+        || fn_check_payment_script('payzen_multi.php', $req_order_id, $processor_data))) {
         // Load gateway response.
         require_once 'payzen/payzen_response.php';
+
         $payzen_response = new PayzenResponse(
             $_REQUEST,
             $processor_data['processor_params']['payzen_ctx_mode'],
@@ -87,14 +82,14 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
             if ($from_server) {
                 $logger->write('IPN URL PROCESS END.');
-                die($payzen_response->getOutputForGateway('auth_fail'));
+                fn_payzen_die($payzen_response->getOutputForGateway('auth_fail'));
             } else {
                 fn_delete_notification('');
                 fn_set_notification('E', __('error'), __('payzen_tech_error_msg'), 'S');
 
                 $logger->write('RETURN URL PROCESS END.');
                 fn_redirect(fn_url('checkout.cart'));
-                die();
+                fn_payzen_die();
             }
         }
 
@@ -107,14 +102,14 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
             if ($from_server) {
                 $logger->write('IPN URL PROCESS END.');
-                die($payzen_response->getOutputForGateway('order_not_found'));
+                fn_payzen_die($payzen_response->getOutputForGateway('order_not_found'));
             } else {
                 fn_delete_notification('');
                 fn_set_notification('E', __('error'), __('payzen_tech_error_msg'), 'S');
 
                 $logger->write('RETURN URL PROCESS END.');
                 fn_redirect(fn_url('checkout.cart'));
-                die();
+                fn_payzen_die();
             }
         }
 
@@ -168,7 +163,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 }
 
                 $logger->write('IPN URL PROCESS END.');
-                echo $payzen_response->getOutputForGateway($msg);
+                fn_payzen_echo($payzen_response->getOutputForGateway($msg));
             } else {
                 if ($payzen_response->isAcceptedPayment()) {
                     $logger->write("Warning! IPN URL call has not worked. Payment completed by return URL call for order #$order_id.");
@@ -194,7 +189,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
                     $logger->write("Payment successful confirmed for order #$order_id.");
                     if ($from_server){
                         $logger->write('IPN URL PROCESS END.');
-                        die ($payzen_response->getOutputForGateway('payment_ok_already_done'));
+                        fn_payzen_die ($payzen_response->getOutputForGateway('payment_ok_already_done'));
                     } else {
                         $logger->write('RETURN URL PROCESS END.');
                         fn_order_placement_routines('route', $order_id, false, true);
@@ -203,14 +198,14 @@ if (defined('PAYMENT_NOTIFICATION')) {
                     $logger->write("Error! Invalid payment result received for already saved order #$order_id. Payment result : {$payzen_response->getTransStatus()}, Order status : {$order_info['status']}.");
                     if ($from_server){
                         $logger->write('IPN URL PROCESS END.');
-                        die ($payzen_response->getOutputForGateway('payment_ko_on_order_ok'));
+                        fn_payzen_die ($payzen_response->getOutputForGateway('payment_ko_on_order_ok'));
                     } else {
                         fn_delete_notification('');
                         fn_set_notification('E', __('error'), __('payzen_tech_error_msg'), 'S');
 
                         $logger->write('RETURN URL PROCESS END.');
                         fn_redirect(fn_url('checkout.cart'));
-                        die();
+                        fn_payzen_die();
                     }
                 }
             } else {
@@ -218,7 +213,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
                 if ($from_server){
                     $logger->write('IPN URL PROCESS END.');
-                    die ($payzen_response->getOutputForGateway('payment_ko_already_done'));
+                    fn_payzen_die ($payzen_response->getOutputForGateway('payment_ko_already_done'));
                 } else {
                     $logger->write('RETURN URL PROCESS END.');
                     fn_order_placement_routines('route', $order_id, false, false);
@@ -283,8 +278,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         // Order info.
         'amount' => $payzen_currency->convertAmountToInteger($total), // Amount in cents.
         'order_id' => $order_info['order_id'],
-        'contrib' => $plugin_param . '/' . PRODUCT_VERSION . '/' . PHP_VERSION,
-        'order_info' => 'session_id=' . $class_session::getId() . '&company_id=' . $class_registry::get('runtime.company_id'),
+        'contrib' => $plugin_param . '/' . PRODUCT_VERSION . '/' . PayzenApi::shortPhpVersion(),
 
         // Misc data.
         'currency' => $payzen_currency->getNum(),
@@ -321,13 +315,16 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
     $payzen_request->setFromArray($data);
 
+    $payzen_request->addExtInfo('session_id', $class_session::getId());
+    $payzen_request->addExtInfo('company_id', $class_registry::get('runtime.company_id'));
+
     // Log data that will be sent to payment gateway.
     $logger->write('Data to be sent to payment gateway : ' . print_r($payzen_request->getRequestFieldsArray(true /* To hide sensitive data. */), true));
 
     // Message to be shown when forwarding to payment platform.
     $msg = __('text_cc_processor_connection', array('[processor]' => 'PayZen'));
 
-echo <<<EOT
+    $form_content = <<<EOT
         <form action="{$payzen_request->get('platform_url')}" method="POST" name="payzen_form">
             {$payzen_request->getRequestHtmlFields()}
         </form>
@@ -342,6 +339,8 @@ echo <<<EOT
     </body>
 </html>
 EOT;
+
+    fn_payzen_echo($form_content);
 }
 
-exit;
+fn_payzen_exit(0);

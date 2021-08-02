@@ -1,3 +1,8 @@
+2.2.0, 2021-08-02:
+- [multi] Adding payment in installments submodule.
+- Do not use vads_order_info* gateway parameter.
+- Update some plugin translations.
+
 2.1.0, 2019-07-18:
 - Plugin compatibility with latest version of CS-Cart (v4.10).
 - Enable signature algorithm selection (SHA-1 or HMAC-SHA-256).

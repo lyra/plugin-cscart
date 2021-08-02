@@ -13,8 +13,8 @@
 <addon scheme="2.0">
     <id>payzen</id>
     <name><![CDATA[PayZen]]></name>
-    <description><![CDATA[Allows you to install and uninstall PayZen payment module processor.]]></description>
-    <version>2.1.0</version>
+    <description><![CDATA[Accept payments by credit cards with PayZen.]]></description>
+    <version>2.2.0</version>
     <priority>100</priority>
     <position>100</position>
     <status>active</status>
@@ -23,28 +23,23 @@
 
     <translations>
         <item for="name" lang="fr"><![CDATA[PayZen]]></item>
-        <item for="description" lang="fr"><![CDATA[Permet d'installer et de désinstaller le processeur du module de paiement PayZen.]]></item>
+        <item for="description" lang="fr"><![CDATA[Accepter les paiements par carte de crédit avec PayZen.]]></item>
     </translations>
 
     <translations>
         <item for="name" lang="de"><![CDATA[PayZen]]></item>
-        <item for="description" lang="de"><![CDATA[Dies erlauben Sie die PayZen Zahlungsmodul Prozessor installieren und deinstallieren.]]></item>
+        <item for="description" lang="de"><![CDATA[Bezahlungen mit Kreditkarten akzeptieren with PayZen.]]></item>
     </translations>
 
     <translations>
         <item for="name" lang="es"><![CDATA[PayZen]]></item>
-        <item for="description" lang="es"><![CDATA[Le permite instalar y desinstalar el procesador del módulo de pago PayZen.]]></item>
+        <item for="description" lang="es"><![CDATA[Aceptar pagos con tarjeta de crédito con PayZen.]]></item>
     </translations>
 
-    <queries>
-        <!-- Install and remove processor data. -->
-        <item><![CDATA[
-            REPLACE INTO ?:payment_processors (`processor`, `processor_script`, `processor_template`, `admin_template`, `callback`, `type`) 
-            VALUES ('PayZen', 'payzen.php', 'views/orders/components/payments/cc_outside.tpl', 'payzen.tpl', 'N', 'P');
-        ]]></item>
-
-        <item for="uninstall">DELETE FROM ?:payment_processors WHERE processor_script = 'payzen.php';</item>
-    </queries>
+    <functions>
+        <item for="install">fn_payzen_install_payment_processors</item>
+        <item for="uninstall">fn_payzen_delete_payment_processors</item>
+    </functions>
 
     <language_variables>
         <!-- English constant parameters. -->
@@ -85,9 +80,9 @@
         <item lang="en" id="payzen_payment_cards">Card Types</item>
         <item lang="en" id="payzen_payment_cards_desc">The card type(s) that can be used for the payment. Select none to use gateway configuration.</item>
 
-        <item lang="en" id="payzen_selective_3ds">SELECTIVE 3DS</item>
-        <item lang="en" id="payzen_3ds_min_amount">Disable 3DS</item>
-        <item lang="en" id="payzen_3ds_min_amount_desc">Amount below which 3DS will be disabled. Needs subscription to selective 3DS option. For more information, refer to the module documentation.</item>
+        <item lang="en" id="payzen_selective_3ds">CUSTOM 3DS</item>
+        <item lang="en" id="payzen_3ds_min_amount">Manage 3DS</item>
+        <item lang="en" id="payzen_3ds_min_amount_desc"><![CDATA[Amount below which customer could be exempt from strong authentication. Needs subscription to «Selective 3DS1» or «Frictionless 3DS2» options. For more information, refer to the module documentation.]]></item>
 
         <item lang="en" id="payzen_amount_restrictions">AMOUNT RESTRICTIONS</item>
         <item lang="en" id="payzen_amount_min">Minimum amount</item>
@@ -143,6 +138,18 @@
         <item lang="en" id="payzen_redirect_success_message_defaut">Redirection to shop in a few seconds...</item>
         <item lang="en" id="payzen_redirect_error_message_defaut">Redirection to shop in a few seconds...</item>
 
+        <item lang="en" id="payzen_multi_title"><![CDATA[PayZen - Payment in installments by credit card]]></item>
+        <item lang="en" id="payzen_multi_short_title"><![CDATA[PayZen - Payment in installments]]></item>
+        <item lang="en" id="payzen_multi_options"><![CDATA[PAYMENT OPTIONS]]></item>
+
+        <item lang="en" id="payzen_multi_count">Count</item>
+        <item lang="en" id="payzen_multi_count_desc">Total number of installments.</item>
+        <item lang="en" id="payzen_multi_period">Period</item>
+        <item lang="en" id="payzen_multi_period_desc">Delay (in days) between installments.</item>
+        <item lang="en" id="payzen_multi_first">1st installment</item>
+        <item lang="en" id="payzen_multi_first_desc">Amount of first installment, in percentage of total amount. If empty, all installments will have the same amount.</item>
+        <item lang="en" id="payzen_multi_warning"><![CDATA[ATTENTION: The payment in installments feature activation is subject to the prior agreement of Société Générale.<br />If you enable this feature while you have not the associated option, an error 10000 – INSTALLMENTS_NOT_ALLOWED or 07 - PAYMENT_CONFIG will occur and the buyer will not be able to pay.]]></item>
+
         <!-- French constant parameters. -->
         <item lang="fr" id="payzen_module_information">INFORMATIONS SUR LE MODULE</item>
         <item lang="fr" id="payzen_developed_by">Développé par</item>
@@ -181,9 +188,9 @@
         <item lang="fr" id="payzen_payment_cards">Types de carte</item>
         <item lang="fr" id="payzen_payment_cards_desc">Le(s) type(s) de carte pouvant être utilisé(s) pour le paiement. Ne rien sélectionner pour utiliser la configuration de la plateforme.</item>
 
-        <item lang="fr" id="payzen_selective_3ds">3DS SÉLECTIF</item>
-        <item lang="fr" id="payzen_3ds_min_amount">Désactiver 3DS</item>
-        <item lang="fr" id="payzen_3ds_min_amount_desc">Montant en dessous duquel 3DS sera désactivé. Nécessite la souscription à l'option 3DS sélectif. Pour plus d'informations, reportez-vous à la documentation du module.</item>
+        <item lang="fr" id="payzen_selective_3ds">3DS PERSONNALISÉ</item>
+        <item lang="fr" id="payzen_3ds_min_amount">Gérer le 3DS</item>
+        <item lang="fr" id="payzen_3ds_min_amount_desc"><![CDATA[Montant en dessous duquel l'acheteur pourrait être exempté de l'authentification forte. Nécessite la souscription à l'option «Selective 3DS1» ou l'option  «Frictionless 3DS2». Pour plus d'informations, reportez-vous à la documentation du module.]]></item>
 
         <item lang="fr" id="payzen_amount_restrictions">RESTRICTIONS SUR LE MONTANT</item>
         <item lang="fr" id="payzen_amount_min">Montant minimum</item>
@@ -239,6 +246,18 @@
         <item lang="fr" id="payzen_redirect_success_message_defaut">Redirection vers la boutique dans quelques instants...</item>
         <item lang="fr" id="payzen_redirect_error_message_defaut">Redirection vers la boutique dans quelques instants...</item>
 
+        <item lang="fr" id="payzen_multi_title"><![CDATA[PayZen - Paiement par carte bancaire en plusieurs fois]]></item>
+        <item lang="fr" id="payzen_multi_short_title"><![CDATA[PayZen - Paiement en plusieurs fois]]></item>
+        <item lang="fr" id="payzen_multi_options"><![CDATA[OPTIONS DE PAIEMENT]]></item>
+
+        <item lang="fr" id="payzen_multi_count">Nombre</item>
+        <item lang="fr" id="payzen_multi_count_desc">Nombre total d\'échéances.</item>
+        <item lang="fr" id="payzen_multi_period">Période</item>
+        <item lang="fr" id="payzen_multi_period_desc">Délai entre deux échéances (en jours).</item>
+        <item lang="fr" id="payzen_multi_first">1ère échéance</item>
+        <item lang="fr" id="payzen_multi_first_desc">Montant de la première échéance en pourcentage du total. Si vide, toutes les échéances auront le même montant.</item>
+        <item lang="fr" id="payzen_multi_warning"><![CDATA[ATTENTION: L'activation de la fonctionnalité de paiement en nfois est soumise à accord préalable de Société Générale.<br />Si vous activez cette fonctionnalité alors que vous ne disposez pas de cette option, une erreur 10000 – INSTALLMENTS_NOT_ALLOWED ou 07 - PAYMENT_CONFIG sera générée et l'acheteur sera dans l'incapacité de payer.]]></item>
+
         <!-- German constant parameters. -->
         <item lang="de" id="payzen_module_information">MODULINFORMATIONEN</item>
         <item lang="de" id="payzen_developed_by">Entwickelt von</item>
@@ -277,9 +296,9 @@
         <item lang="de" id="payzen_payment_cards">Art der Kreditkarten</item>
         <item lang="de" id="payzen_payment_cards_desc">Liste der/die für die Zahlung verfügbare(n) Kartentyp(en), durch Semikolon getrennt.</item>
 
-        <item lang="de" id="payzen_selective_3ds">SELEKTIVES 3DS</item>
-        <item lang="de" id="payzen_3ds_min_amount">3DS deaktivieren</item>
-        <item lang="de" id="payzen_3ds_min_amount_desc">Betrag, unter dem 3DS deaktiviert wird. Muss für die Option Selektives 3DS freigeschaltet sein. Weitere Informationen finden Sie in der Moduldokumentation.</item>
+        <item lang="de" id="payzen_selective_3ds">CUSTOM 3DS</item>
+        <item lang="de" id="payzen_3ds_min_amount">Manage 3DS</item>
+        <item lang="de" id="payzen_3ds_min_amount_desc"><![CDATA[Amount below which customer could be exempt from strong authentication. Needs subscription to «Selective 3DS1» or «Frictionless 3DS2» options. For more information, refer to the module documentation.]]></item>
 
         <item lang="de" id="payzen_amount_restrictions">BETRAGSBESCHRÄNKUNGEN</item>
         <item lang="de" id="payzen_amount_min">Mindestbetrag</item>
@@ -335,6 +354,18 @@
         <item lang="de" id="payzen_redirect_success_message_defaut">Weiterleitung zum Shop in Kürze...</item>
         <item lang="de" id="payzen_redirect_error_message_defaut">Weiterleitung zum Shop in Kürze...</item>
 
+        <item lang="de" id="payzen_multi_title"><![CDATA[PayZen - Ratenzahlung mit EC-/Kreditkarte]]></item>
+        <item lang="de" id="payzen_multi_short_title"><![CDATA[PayZen - Ratenzahlung]]></item>
+        <item lang="de" id="payzen_multi_options"><![CDATA[ZAHLUNGSARTEN]]></item>
+
+        <item lang="de" id="payzen_multi_count">Nummer</item>
+        <item lang="de" id="payzen_multi_count_desc">Gesamtanzahl der Raten.</item>
+        <item lang="de" id="payzen_multi_period">Zeitraum</item>
+        <item lang="de" id="payzen_multi_period_desc">Zeitraum (in Tagen) zwischen den Raten.</item>
+        <item lang="de" id="payzen_multi_first">1. Rate</item>
+        <item lang="de" id="payzen_multi_first_desc">Höhe der ersten Rate, Angabe in Prozent der Gesamtsumme. Ohne Angabe werden alle Raten mit dem gleichen Betrag ausgewiesen</item>
+        <item lang="de" id="payzen_multi_warning"><![CDATA[ATTENTION: The payment in installments feature activation is subject to the prior agreement of Société Générale.<br />If you enable this feature while you have not the associated option, an error 10000 – INSTALLMENTS_NOT_ALLOWED or 07 - PAYMENT_CONFIG will occur and the buyer will not be able to pay.]]></item>
+
         <!-- Spanish constant parameters. -->
         <item lang="es" id="payzen_module_information">INFORMACIÓN DEL MÓDULO</item>
         <item lang="es" id="payzen_developed_by">Desarrollado por</item>
@@ -373,9 +404,9 @@
         <item lang="es" id="payzen_payment_cards">Tipos de tarjeta</item>
         <item lang="es" id="payzen_payment_cards_desc">El tipo(s) de tarjeta que se puede usar para el pago. No haga ninguna selección para usar la configuración del portal.</item>
 
-        <item lang="es" id="payzen_selective_3ds">3DS SELECTIVO</item>
-        <item lang="es" id="payzen_3ds_min_amount">Deshabilitar 3DS</item>
-        <item lang="es" id="payzen_3ds_min_amount_desc">Monto por debajo del cual se deshabilitará 3DS. Requiere suscripción a la opción 3DS selectivo. Para más información, consulte la documentación del módulo.</item>
+        <item lang="es" id="payzen_selective_3ds">3DS PERSONALIZADO</item>
+        <item lang="es" id="payzen_3ds_min_amount">Gestionar el 3DS</item>
+        <item lang="es" id="payzen_3ds_min_amount_desc"><![CDATA[Monto por debajo del cual el comprador podría estar exento de de la autenticación fuerte. Requiere suscripción a la opción «Selective 3DS1» o a la opción «Frictionless 3DS2». Para más información, consulte la documentación del módulo.]]></item>
 
         <item lang="es" id="payzen_amount_restrictions">RESTRICCIONES DE MONTO</item>
         <item lang="es" id="payzen_amount_min">Monto mínimo</item>
@@ -430,5 +461,17 @@
         <item lang="es" id="payzen_url_check_details"><![CDATA[Para entender el problema, lea la documentación del módulo:<br />&nbsp;&nbsp;&nbsp;- Capítulo &laquo; Leer detenidamente antes de continuar &raquo;<br />&nbsp;&nbsp;&nbsp;- Capítulo &laquo; Configuración de la URL de notificación &raquo;]]></item>
         <item lang="es" id="payzen_redirect_success_message_defaut">Redirección a la tienda en unos momentos...</item>
         <item lang="es" id="payzen_redirect_error_message_defaut">Redirección a la tienda en unos momentos...</item>
+
+        <item lang="es" id="payzen_multi_title"><![CDATA[PayZen - Pago con tarjeta de crédito en cuotas]]></item>
+        <item lang="es" id="payzen_multi_short_title"><![CDATA[PayZen - Pago en cuotas]]></item>
+        <item lang="es" id="payzen_multi_options"><![CDATA[OPCIONES DE PAGO]]></item>
+
+        <item lang="es" id="payzen_multi_count">Conteo</item>
+        <item lang="es" id="payzen_multi_count_desc">Número total de vencimientos.</item>
+        <item lang="es" id="payzen_multi_period">Periodo</item>
+        <item lang="es" id="payzen_multi_period_desc">Plazo (en días) entre vencimientos.</item>
+        <item lang="es" id="payzen_multi_first">Primer vencimiento</item>
+        <item lang="es" id="payzen_multi_first_desc">Monto del primer vencimiento, en porcentaje del monto total. Si está vacío, todos los vencimientos tendrán el mismo monto.</item>
+        <item lang="es" id="payzen_multi_warning"><![CDATA[ATENCIÓN: La activación de la función de pago en cuotas está sujeta al acuerdo previo de Société Générale.<br />Si habilita esta función cuando no tiene la opción asociada, ocurrirá un error 10000 – INSTALLMENTS_NOT_ALLOWED o 07 - PAYMENT_CONFIG y el comprador no podrá pagar.]]></item>
     </language_variables>
 </addon>
