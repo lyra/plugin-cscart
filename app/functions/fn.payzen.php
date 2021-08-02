@@ -13,7 +13,10 @@ global $payzen_plugin_features, $payzen_default_values;
 $payzen_plugin_features = array(
     'qualif' => false,
     'prodfaq' => true,
-    'shatwo' => true
+    'shatwo' => true,
+
+    'multi' => true,
+    'restrictmulti' => false
 );
 
 $payzen_default_values = array(
@@ -30,7 +33,7 @@ $payzen_default_values = array(
 
     'cms_identifier' => 'CS-Cart_4.x',
     'support_email' => 'support@payzen.eu',
-    'plugin_version' => '2.1.0',
+    'plugin_version' => '2.2.0',
     'gateway_version' => 'V2'
 );
 
@@ -60,18 +63,54 @@ function fn_payzen_convert_trans_status($payzen_status, $success_status = 'P')
     }
 }
 
-function fn_payzen_logger()
-{
-    $class_registry = class_exists('\Tygh\Registry') ? '\Tygh\Registry' : 'Registry';
-    $class_logger = class_exists('\Tygh\Logger') ? '\Tygh\Logger' : 'Logger';
+function fn_payzen_get_class($classname){
+    switch ($classname){
+        case 'Session':
+            return class_exists('\Tygh\Session') ? '\Tygh\Session' : 'Session';
 
-    $logger = $class_logger::instance();
+        case 'Registry':
+            return class_exists('\Tygh\Registry') ? '\Tygh\Registry' : 'Registry';
+
+        case 'Logger':
+            return class_exists('\Tygh\Logger') ? '\Tygh\Logger' : 'Logger';
+
+        default:
+            return '';
+    }
+}
+
+function fn_payzen_get_logger_path(){
+    $class_registry = fn_payzen_get_class('Registry');
+
     $log_dir = $class_registry::get('config.dir.var'). 'logs/';
     if (!is_dir($log_dir)) {
         fn_mkdir($log_dir);
     }
 
-    $logger->__set('logfile', $log_dir . 'payzen-' . date('Y-m') . '.log');
+    return $log_dir . 'payzen-' . date('Y-m') . '.log';
+}
+
+function fn_payzen_logger()
+{
+    $class_logger = fn_payzen_get_class('Logger');
+
+    $logger = $class_logger::instance();
+    $logger->__set('logfile', fn_payzen_get_logger_path());
 
     return $logger;
+}
+
+function fn_payzen_die($message)
+{
+    die($message);
+}
+
+function fn_payzen_exit($message)
+{
+    exit($message);
+}
+
+function fn_payzen_echo($param)
+{
+    echo $param;
 }
